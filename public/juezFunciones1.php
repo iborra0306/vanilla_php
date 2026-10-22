@@ -1,57 +1,41 @@
 <?php
 declare(strict_types=1);
 
-/*
-factoresPrimos($numero): que recibe un número entero y devuelve un array. Cada vez que encontremos un factor x que divide al
-número incrementaremos el valor del elemento x del array. Por ejemplo, el array resultante de factorizar el número 24 es:
-
-        array[2] = 3
-	    array[3] = 1
-
-*/
-
-    function factoresPrimos(int $numero): array
+    function suma(array $datos): int
     {
-        foreach ($datos as $dato){
-            if($numero / $dato){
-                $dato++;    
-            }
+        $suma = 0;
+        for($i = 0; $i < count($datos); $i++) {
+            $suma += $datos[$i];
         }
+        return $suma;
     }
 
-/*
-    imprimeFactoresPrimos($factoresArray): que recibirá el array resultante de la función anterior y generará una cadena de caracteres
-    en la que se irán concatenando los factores primos elevados a sus exponentes, como aparece en el resultado de ejemplo. Para recorrer
-    el array de los factores primos puedes utilizar la instrucción
-
-*/
-
-    function imprimeFactoresPrimos(array $factoresArray): array
+    function media(array $datos): float
     {
-        $cadena = '';
-
-        foreach (factoresArray as $clave => $valor){
-            $cadena +=
-        }
+        $media = 0;
+        return $media = suma($datos)  / count($datos);
     }
 
     while($linea = fgets(STDIN)){
 
         $datos = explode(" ", trim($linea));
-        $x = 2;
+        $operador = array_shift($datos);
 
-        foreach ($datos as $dato) {
-            while($dato <> 1){
-                if($dato % x == 0){
-                    echo $x;
-                    $dato = $dato / x;
-                } else {
-                    $x = $x + 1;
-                }
+        if(count($datos) >= 2) {
+            switch ($operador) {
+                case 'suma':
+                    echo '<p>' . 'La suma de los números es: ' . suma($datos) . '</p>';
+                    break;
+                case 'media':
+                    echo '<p>' . 'La media de los números es: ' . media($datos) . '</p>';
+                    break;
+                default:
+                    echo '<p>' . '(Error) Operación no permitida' . '</p>';
+                    break;
             }
+        } else {
+            echo '<p>' . '(Error) No dispongo de suficientes argumentos.' . '</p>';
         }
-
-        /* <p><?php echo $numero ?> = <?php echo imprimeFactoresPrimos(factoresPrimos($numero)) ?></p>*/
-        
+        echo "\n";
     }
     

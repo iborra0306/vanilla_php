@@ -13,39 +13,43 @@
         $elemento = $valores[$i];
 
         if(is_numeric($elemento)) {
-            $pila = is_numeric($elemento); 
+            $pila[] = (int) $elemento; 
         } else{
 
-            if(count($pila) >= 2) {
-                $resultado = '(Error) El usuario ha introducido demasiados elementos.';
-                exit;
+            if(count($pila) < 2) {
+                exit('<p>(Error) El usuario no ha introducido suficientes argumentos en la expresión.</p>');
             }
-            $valorUno = array_pop($pila);
+
+            $valorDos = array_pop($pila);
             $valorUno = array_pop($pila);
 
-            switch($elemento[$i]) {
+            switch($elemento) {
                 case '+':
                     $resultado = $valorUno + $valorDos;
+                    $pila[] = $resultado;
                     break;
                 case ':':
                     $resultado = $valorUno / $valorDos;
+                    $pila[] = $resultado;
                     break;
                 case 'x':
                     $resultado = $valorUno * $valorDos;
+                    $pila[] = $resultado;
                     break;
                 case '-':
                     $resultado = $valorUno - $valorDos;
+                    $pila[] = $resultado;
                     break;
             }
 
         }
     }
 
-        if(!count($pila) = 1) {
-            $resultado = '(Error) El usuario ha introducido demasiados elementos.';
+        if(count($pila) !== 1) {
+            exit('<p>(Error) El usuario ha introducido demasiados elementos.</p>');
         } else {
-            $resultado = 'El resultado es: ' . $elemento;
+            $resultado = 'El resultado es: ' . $pila[0];
         }
 
-    echo $resultado;
+    echo '<p>' . $resultado . '</p>';
 ?>

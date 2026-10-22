@@ -1,12 +1,14 @@
 <?php
-  $ciclos = ['DAW', 'DAM'];
-  $ciclos[] = 'ASIR';
+// 1
+   $ciclos = ['DAW', 'DAM'];
+   $ciclos[] = 'ASIR';
 
-  echo '<p>Número de ciclos: ', count($ciclos), '</p>';
-  echo '<p>', in_array('SMR', $ciclos, true) ? 'SMR ofertado' : 'SMR no ofertado', '</p>';
+   echo '<p>Número de ciclos: ', count($ciclos), '</p>';
+   echo '<p>', in_array('SMR', $ciclos, true) ? 'SMR ofertado' : 'SMR no ofertado', '</p>';
 ?>
 
 <?php
+// 2
   $ciclo = [
     'codCiclo' => 'DAW',
     'nombre'   => 'Desarrollo de Aplicaciones Web',
@@ -25,32 +27,45 @@
     echo '<li class="modulo">', $codigo, ' — ', $nombre, '</li>';
   }
   echo '</ul>';
+
+  echo '<pre>';
+  print_r($ciclo);
+  echo '</pre>';
+?>
+
+<?php
+// 3
+    $curriculos = [
+        ['alumno' => 'Ana López',    'ciclo' => 'DAW',  'video' => 'https://youtu.be/curriculo1'],
+        ['alumno' => 'Marcos Pérez', 'ciclo' => 'DAM',  'video' => 'https://youtu.be/curriculo2'],
+        ['alumno' => 'Laura García', 'ciclo' => 'ASIR', 'video' => 'https://youtu.be/curriculo3'],
+    ];
+    $alumnos = array_column($curriculos, 'alumno');
+    sort($alumnos);
+    echo '<p>Alumnos: ', implode(', ', $alumnos), '</p>';
+?>
+
+<?php
+// 4
+  $curriculos = [
+        ['alumno' => 'Ana López',    'ciclo' => 'DAW',  'video' => 'https://youtu.be/curriculo1'],
+        ['alumno' => 'Marcos Pérez', 'ciclo' => 'DAM',  'video' => 'https://youtu.be/curriculo2'],
+        ['alumno' => 'Laura García', 'ciclo' => 'ASIR', 'video' => 'https://youtu.be/curriculo3'],
+  ];
+
+  ['alumno' => $alumno, 'ciclo' => $codCiclo] = $curriculos[1];
+  echo '<p>Segundo currículo: ', $alumno, ' (', $codCiclo, ')</p>';
 ?>
 
 <?php
   $curriculos = [
-    ['alumno' => 'Ana López',    'ciclo' => 'DAW',  'video' => 'https://youtu.be/curriculo1'],
-    ['alumno' => 'Marcos Pérez', 'ciclo' => 'DAM',  'video' => 'https://youtu.be/curriculo2'],
-    ['alumno' => 'Laura García', 'ciclo' => 'ASIR', 'video' => 'https://youtu.be/curriculo3'],
+        ['alumno' => 'Ana López',    'ciclo' => 'DAW',  'video' => 'https://youtu.be/curriculo1'],
+        ['alumno' => 'Marcos Pérez', 'ciclo' => 'DAM',  'video' => 'https://youtu.be/curriculo2'],
+        ['alumno' => 'Laura García', 'ciclo' => 'ASIR', 'video' => 'https://youtu.be/curriculo3'],
   ];
 
-  $alumnos = array_column($curriculos, 'alumno');
-   sort($alumnos);
-   echo '<p>Alumnos: ', implode(', ', $alumnos), '</p>';
-?>
-
-<?php
-  [$primero, $segundo] = ['DAW', 'DAM', 'ASIR'];
-  echo $primero;   // DAW
-?>
-
-<?php
   $copia = $curriculos;
-  $copia[] = ['alumno' => 'Marcos Pérez', 'ciclo' => 'DAW', 'video' => ''];
+  $copia[] = ['alumno' => 'Pablo Ruiz', 'ciclo' => 'DAW', 'video' => ''];
 
-  echo count($curriculos);   // 3: el original no ha cambiado
-  echo count($copia);        // 4
-
-  echo '<p>Original: ', count($curriculos), ' · Copia: ', count($copia), '</p>';
-
+   echo '<p>Original: ', count($curriculos), ' · Copia: ', count($copia), '</p>';
 ?>
