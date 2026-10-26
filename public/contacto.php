@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 // 0. Arranque
-session_start();
+session_start([
+    'cookie_httponly' => true,
+    'cookie_samesite' => 'Lax',
+]);
 
 // 1. Funciones
 function e(string $texto): string
@@ -41,16 +44,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $_SESSION['mensaje'] = 'Solicitud creada correctamente';
 
+        // añadir cookie para el ultimo nombre
+        setcookie('ultimo_nombre', $nombre, [
+            'expires'  => time() + 60 * 60 * 24 * 30,   // 30 días
+            'path'     => '/',
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+
         header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
         exit;
     }
 }
 
+$nombreCookie = $_COOKIE['ultimo_nombre'] ?? '';
+if (!is_string($nombreCookie)) {
+    $nombreCookie = '';
+}
+$nombreCookie = mb_substr(trim($nombreCookie), 0, 50);
+
 // 5. Lo que se muestra por pantalla
 $aviso = $_SESSION['mensaje'] ?? null;
 unset($_SESSION['mensaje']);
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombreCampo = $nombre;
+} else {
+    $nombreCampo = $nombreCookie;
+}
+
 $solicitudes = $_SESSION['solicitudes'] ?? [];
+
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -86,7 +110,7 @@ $solicitudes = $_SESSION['solicitudes'] ?? [];
                         <form action="" method="post">
                             <div class="fields">
                                 <div class="field">
-                                    <input type="text" name="nombre" placeholder="Nombre" value="<?= e($nombre) ?>" />
+                                    <input type="text" name="nombre" placeholder="Nombre" value="<?= e($nombreCampo) ?>" />
                                     <!-- error del nombre -->
                                     <?php if (isset($errores['nombre'])) : ?>
                                         <span class="error"><?= e($errores['nombre']) ?></span>

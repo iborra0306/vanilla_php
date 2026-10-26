@@ -27,9 +27,9 @@ function resultado(string $jugador, string $ordenador): string
         case $jugador === 'piedra' && $ordenador === 'tijera':
         case $jugador === 'papel' && $ordenador === 'piedra':
         case $jugador === 'tijera' && $ordenador === 'papel':
-            return 'Ganaste :)';
+            return 'Ganaste';
         default:
-            return 'Perdiste :(';
+            return 'Perdiste';
             break;
     }
 
@@ -37,6 +37,8 @@ function resultado(string $jugador, string $ordenador): string
 // Recogida de datos
 
 $eleccion = $_GET['opcion'] ?? '';
+$vidasJugador   = (int) ($_GET['vidasJugador'] ?? 3);
+$vidasOrdenador = (int) ($_GET['vidasOrdenador'] ?? 3);
 
 // Validacion
 $elementos = ['piedra', 'papel', 'tijera'];
@@ -49,13 +51,24 @@ if (!in_array($eleccion, $elementos, true)) {
 if ($eleccion !== '') {
     $ordenador = jugadaOrdenador();
     $result = resultado($eleccion, $ordenador);
+
+    // 1. Actualizar vidas según $result  (Ganaste -> $vidasOrdenador--, Perdiste -> $vidasJugador--)
+    if($result === 'Ganaste') {
+        $vidasOrdenador--;
+    } elseif($result === 'Perdiste') {
+        $vidasJugador--;
+    }
+    
+    if($vidasOrdenador <= 0) {
+        $result = 'Ganaste la partida';
+    } elseif($vidasJugador <= 0) {
+        $result = 'Perdiste la partida';
+    }
+
 } else {
-    $ordenador = '';
     $result = '';
+    $ordenador = '';
 }
-
-// Mostrar por pantalla
-
 
 ?>
 <!DOCTYPE html>
@@ -137,22 +150,24 @@ if ($eleccion !== '') {
         <p class="sub">Elige tu jugada</p>
 
         <!-- Jugadas: tres enlaces escritos a mano -->
-        <nav class="jugadas">
-            <a href="?opcion=piedra"><span>&#9994;</span>Piedra</a>
-            <a href="?opcion=papel"><span>&#9995;</span>Papel</a>
-            <a href="?opcion=tijera"><span>&#9996;</span>Tijera</a>
-        </nav>
+        <?php if ($vidasJugador > 0 && $vidasOrdenador > 0) : ?>
+            <nav class="jugadas">
+                <a href="?opcion=piedra&vidasJugador=<?= $vidasJugador ?>&vidasOrdenador=<?= $vidasOrdenador ?>"><span>&#9994;</span>Piedra</a>
+                <a href="?opcion=papel&vidasJugador=<?= $vidasJugador ?>&vidasOrdenador=<?= $vidasOrdenador ?>"><span>&#9995;</span>Papel</a>
+                <a href="?opcion=tijera&vidasJugador=<?= $vidasJugador ?>&vidasOrdenador=<?= $vidasOrdenador ?>"><span>&#9996;</span>Tijera</a>
+            </nav>
+        <?php else : ?>
+            <a href="?">Nueva partida</a>
+        <?php endif; ?>
 
-        <!-- Resultado de la partida: solo si hay jugada válida -->
-        <!--
-        <section class="resultado">
-            <p class="cruce">T&uacute;: ... &middot; Ordenador: ...</p>
-            <p class="veredicto">...</p>
-        </section>
-        -->
-        <section class="resultado">
-            <p class="veredicto"><?= e(resultado($eleccion, jugadaOrdenador()))?></p>
-        </section>
+        <?php if ($result !== '') : ?>
+            <section class="resultado">
+                <p class="cruce">Tú: <?= e($eleccion) ?> - Ordenador: <?= e($ordenador) ?></p>
+                <p class="veredicto"><?= e($result) ?></p>
+                <p>Tu: <?= e((string) $vidasJugador) ?></p>
+                <p>Ordenador: <?= e((string) $vidasOrdenador) ?></p>
+            </section>
+        <?php endif; ?>
     </main>
 </body>
 </html>
