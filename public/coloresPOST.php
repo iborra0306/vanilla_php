@@ -15,28 +15,32 @@ function e(string $texto): string
     return htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
 }
 
-$url = $_POST['ans'] ?? '';
-$ultimaUrl = $_COOKIE['ultima_url'] ?? '';
-$urlDef = $_GET;
+const IMAGEN = 'https://miro.medium.com/max/4800/1*r2fR_OBcBCSUtfLLaTX3JA.png';
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-
-    $urlDef = 'https://miro.medium.com/max/4800/1*r2fR_OBcBCSUtfLLaTX3JA.png';
-
+function getImagen(string $url_, string $cookie_): string
+{
+    if ($url_ !== '') {
+        return $url_;
+    }
+    if ($cookie_ !== '') {
+        return $cookie_;
+    }
+    return IMAGEN;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$url    = $_POST['ans'] ?? '';
+$cookie = $_COOKIE['ultima_imagen'] ?? '';
 
-    setcookie('ultima_url', $url, [
-                'expires'  => time() + 60 * 60 * 24 * 30,
-                'httponly' => true,
-                'samesite' => 'Lax',
+if ($url !== '') {
+    setcookie('ultima_imagen', $url, [
+        'expires'  => time() + 60 * 60 * 24 * 30,
+        'path'     => '/',
+        'httponly' => true,
+        'samesite' => 'Lax',
     ]);
-
 }
 
-print_r($urlDef);
-
+$imagen = getImagen($url, $cookie);
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -61,17 +65,11 @@ print_r($urlDef);
     <!-- Main -->
     <section id="main">
         <header>
-
-            <?php if(isset($url)) : ?>
-                <span class="avatar"><img src="<?= e($urlDef) ?>" alt="" width="256px"/></span>
-            <?php else :?>
-                <span class="avatar"><img src="<?= e($url ?? $ultimaUrl) ?>" alt="" width="256px"/></span>
-            <?php endif; ?>
-
+            <span class="avatar"><img src="<?= e(getImagen($url, $cookie)) ?>" alt="" width="256px"/></span>
             <h2>Elecci&oacute;n de colores</h2>
             <form name="calculator" action="" method="post">
                 <!-- Escribe el resultado como valor de la propiedad value -->
-                <input type="textfield" name="ans" value="<?= e($url) ?>"  style="background-color:rgb(255, 255, 255)">
+                <input type="textfield" name="ans" value=""  style="background-color:rgb(255, 255, 255)">
                 <br>
                 <label for="rojo">Rojo:</label>
                 <input type="range" name="rojo" value="" min="0" max="255">
