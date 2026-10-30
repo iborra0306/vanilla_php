@@ -1,1 +1,2 @@
 - Arreglar el formulario del login
+- Añadir formulario de registro
